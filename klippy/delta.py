@@ -119,9 +119,9 @@ class DeltaKinematics:
         homing_state.home(list(coord), homepos, self.steppers
                           , s.homing_speed/2.0, second_home=True)
         # Set final homed position
-        coord = [s.mcu_stepper.get_commanded_position() + s.get_homed_offset()
-                 for s in self.steppers]
-        homing_state.set_homed_position(self._actuator_to_cartesian(coord))
+        spos = self._cartesian_to_actuator(homepos)
+        spos = [spos[i] + self.steppers[i].get_homed_offset() for i in StepList]
+        homing_state.set_homed_position(self._actuator_to_cartesian(spos))
     def motor_off(self, move_time):
         self.limit_xy2 = -1.
         for stepper in self.steppers:
